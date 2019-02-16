@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--This are the main Navigation Items for the Application. The ActionMenu Activity will expand this menu and make it its main navigation input with Animation-->
+    <item android:id="@+id/action_menu_hello" android:title="@string/showHelloToast" android:icon="@drawable/baseline_android_24" android:onClick="showHello" android:enabled="true"/>
+    <item android:id="@+id/action_menu_vuzix" android:title="@string/showVuzixToast" android:icon="@drawable/baseline_info_24" android:onClick="showVuzix" tools:ignore="MenuTitle" />
+    <item android:id="@+id/action_menu_blade" android:title="@string/showBladeToast" android:icon="@drawable/baseline_copyright_24" android:onClick="showBlade"/>
+    <item android:id="@+id/action_menu_lunch_center_lock" android:title="@string/showCenterContent" android:icon="@drawable/baseline_info_24" />
+
+</menu>

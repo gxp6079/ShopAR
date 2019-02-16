@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Blade_Template</string>
+    <string name="appwidget_text_light">Example Widget in Light Mode</string>
+    <string name="appwidget_text_dark">Example Widget in Dark Mode</string>
+    <string name="appwidget_text">Example Widget default state</string>
+    <string name="showHelloToast">Show Hello Toast</string>
+    <string name="showVuzixToast">Show Vuzix Toast</string>
+    <string name="showBladeToast">Show Blade Toast</string>
+    <string name="showHelloToast2">Select to show the Hello Toast</string>
+    <string name="showVuzixToast2">Select to show the Vuzix Toast</string>
+    <string name="showBladeToast2">Select to show the Blade Toast</string>
+    <string name="centerContent">Launch Center Content style activity</string>
+    <string name="aroundContent">Launch Around Content Lock style activity</string>
+    <string name="showAroundContent">Show Around Content style activity</string>
+    <string name="showCenterContent">Show Center Content style activity</string>
+    <string name="showPopUpMenu">Show Pop Up Menu style activity</string>
+    <string name="Hello">Hellos World!</string>
+    <string name="Vuzix">Vuzix!</string>
+    <string name="Blade1">Blade!</string>
+    <string name="Blade">%d Blade!</string>
+    <string name="CenterContentInfo">Center Content style means that the View or real-state available is in the center and its lock
+    to that position. The Action menus move underneath the main UI area.</string>
+    <string name="PoPContentInfo">Popup menu style means that the actions menu are hidden.
+        Giving you full real state. The Action menu will "Pop Up" with a Single Tap on the touch pad.
+        To Hide the Action Menu do a two finger tap(back gesture)</string>
+    <string name="AroundContentInfo">Around Content style means that the View or real-state available is AROUND the center of the screen.</string>
+    <string name="AroundContentInfo2">The Action menus move in the CENTER of the main UI area.</string>
+</resources>

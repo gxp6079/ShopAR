@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hud_light_gray"
+    android:padding="@dimen/widget_margin"
+    style="@style/AppTheme.Light">
+
+    <!--WIDGET LAYOUT TO USE FOR Light(Bright) MODE ENVIRONSMENTS.
+    You will usually need to generate two Widget Layout for Dark Environments and Light(Bright) Environments.-->
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:background="@color/hud_light_gray"
+        android:contentDescription="@string/appwidget_text_light"
+        android:text="@string/appwidget_text_light"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+
+</RelativeLayout>

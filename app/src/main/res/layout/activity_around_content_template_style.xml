@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <!--Like any normal Android Application -->
+    <!--Bottom Lock style means that the View or real-state available AROUND the center of the screen.
+     The Center of the screen is utilize for hte action menus to give more preference to the options.
+     Also the Top AND BOTTOM of the screen do not animate and are the area to utilize for main UI
+     elements.-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/main_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/AroundContentInfo"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/icon"
+            android:tint="?imageHeaderTintColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+    <!--Utilize something similar to this SPACE item to understand the dimensions of the ActionMenu
+    and your available real state.-->
+    <Space
+        android:id="@+id/menu_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_menu_height"
+        android:layout_centerInParent="true"/>
+
+    <!--This item has some custom Attributes from our ATTRIBUTES files. ?valueTextColor.
+    For more information on this kind of reference please refer to:
+    https://developer.android.com/training/custom-views/create-view
+    -->
+    <TextView
+        android:id="@+id/main_value"
+        android:textColor="?valueTextColor"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menu_placeholder"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/AroundContentInfo2"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="devkit.blade.vuzix.com.blade_template_app">
+
+    <!-- Notice we modified the android:theme to use Vuzix  HudTheme -->
+    <!--Here we register our own DynamicThemeApplication to handle theme changing.-->
+    <application
+        android:name=".BladeSampleApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/baseline_android_24"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/baseline_android_24"
+        android:supportsRtl="true"
+        android:theme="@style/HudTheme">
+        <meta-data
+            android:name="com.vuzix.icon.tint" android:value="true" />
+        <activity android:name=".center_content_template_activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Vuzix Icon Tint -->
+            <!-- If you are going to utilize Vuzix Launcher Tint ensure your icon does have a
+            Transparent layer and that some pixel cannot be tint over or modified. If not the icon
+            will not look as expected-->
+            <meta-data
+                android:name="com.vuzix.icon.tint" android:value="true" />
+
+        </activity>
+        <activity android:name=".around_content_template_activity">
+        </activity>
+
+        <activity android:name=".center_content_pop_up_menu_template_activity">
+        </activity>
+
+        <receiver android:name=".Template_Widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/template_widget_info" />
+
+            <!--Ensure that this is the complete Main Launcher activity class.
+                If the Main Launcher Widget does not change, ensure this is configure properly. -->
+            <meta-data android:name="com.vuzix.launcher.widget"
+                android:value="devkit.blade.vuzix.com.blade_template_app.center_content_template_activity" />
+        </receiver>
+
+
+        <receiver
+            android:name=".Template_Widget_Update_Receiver">
+            <intent-filter>
+                <action android:name="com.vuzix.intent.action.UI_DISPLAY_MODE" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
