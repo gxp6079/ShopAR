@@ -23,5 +23,6 @@ dependencies {
     implementation 'com.vuzix:hud-resources:1.1'
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.google.android.gms:play-services:7.8+'
 }
