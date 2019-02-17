@@ -1,5 +1,7 @@
 package com.blade.ShopAR;
 
+import android.util.JsonReader;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,40 +20,50 @@ import static java.lang.System.in;
 public class WegmansFactory {
 
     public static void main(String[] args) throws IOException, JSONException {
-        String url = makeBarcodeURL("3400004025");
+        String url = makeURL("3400004025", Request_Type.barcode);
         JSONObject s = getJSONResponse(url);
         JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
         JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
-        JSONObject s3 = getJSONResponse(makeProductURL("/products/484208/prices?api-version=2018-10-18"));
+        JSONObject s3 = getJSONResponse(makeURL("484208", Request_Type.price));
 
+        System.out.println(s.get("_links"));
         //System.out.println(s1.replace(',', '\n'));
     }
 
     // "/products/484208?api-version=2018-10-18"
     // "https://api.wegmans.io/meals/recipes/22187?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
 
-    private static enum Request_Type {barcode, product, price, meal, recipie, stores}
+    private static enum Request_Type {barcode, product, price, meal, recipe, stores}
     private static final String URL_STUB = "https://api.wegmans.io/";
     private static final String KEY = "subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e";
 
     private static final String BARCODE_URL = URL_STUB + "products/barcodes/%s?api-version=2018-10-18&" + KEY;
     private static final String PRODUCT_URL = URL_STUB + "products/%s?api-version=2018-10-180&" + KEY;
-    private static final String PRICES_URL = URL_STUB + products/{sku}/prices?api-version=2018-10-18[&stores]
+    private static final String PRICES_URL = URL_STUB + "products/%s/prices?api-version=2018-10-18" + KEY;
+
     public static String makeURL(String input, Request_Type r) {
         
         String url = null;
         switch(r) {
-            case barcode: url = BARCODE_URL;    //Uses Barcode
+            case barcode:
+                url = BARCODE_URL;    //Uses Barcode
                 break;
-            case product: url = PRODUCT_URL;    //Uses SKU
+            case product:
+                url = PRODUCT_URL;    //Uses SKU
                 break;
-            case meal: url = SKU_URL;
+            case price:
+                url = PRICES_URL;
                 break;
-            case price: url = SKU_URL;
+            /*case meal:
+                url = MEALS_URL;
                 break;
-            case price: url = SKU_URL;
+            case recipe:
+                url = RECIPES_URL;
                 break;
-
+            case stores:
+                url = STORES_URL;
+                break;
+            Not iplemented yet, no use planned. Trash. */
         }
         return String.format(url,input);
     }
@@ -71,7 +83,7 @@ public class WegmansFactory {
         con.setRequestProperty("Content-Type", "application/json");
 
         //Initialized Buffered Reader and JSONObject
-        JSONObject jsonResponse = null;
+        JSONObject jsonResponse;
         BufferedReader bReader = null;
 
         try {                       //GZip data
@@ -89,6 +101,7 @@ public class WegmansFactory {
                 responseStrBuilder.append(inputStr);
 
             // Converts a string into a JSONObject
+            //JsonReader jReader = Json.createReader();
             jsonResponse = new JSONObject(responseStrBuilder.toString());
 
             bReader.close();
