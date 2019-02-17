@@ -9,36 +9,51 @@ import java.net.URL;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static java.lang.System.in;
+
 public class WegmansFactory {
-    public static void main(String[] args) throws IOException{
+
+    public static void main(String[] args) throws IOException, JSONException {
         String url = makeBarcodeURL("3400004025");
-        String s = getInfo(url);
-        String s1 = getInfo(urlStub + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
-        String s2 = getInfo(urlStub + "/products/665368?api-version=2018-10-18" + "&" + key);
-        String s3 = getInfo(makeProductURL("/products/484208/prices?api-version=2018-10-18"));
-        String m = "/products/484208?api-version=2018-10-18";
+        JSONObject s = getJSONResponse(url);
+        JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
+        JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
+        JSONObject s3 = getJSONResponse(makeProductURL("/products/484208/prices?api-version=2018-10-18"));
 
-
-        System.out.println(s3.replace(',', '\n'));
         //System.out.println(s1.replace(',', '\n'));
     }
 
     // "/products/484208?api-version=2018-10-18"
     // "https://api.wegmans.io/meals/recipes/22187?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
 
-    private static enum url {barcode, product, price, meal, recipei, stores}
-    private static final String urlStub = "https://api.wegmans.io/";
-    private static final String key = "subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e";
+    private static enum Request_Type {barcode, product, price, meal, recipie, stores}
+    private static final String URL_STUB = "https://api.wegmans.io/";
+    private static final String KEY = "subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e";
 
-    // takes in barcode and makes valid url to search with
-    public static String makeBarcodeURL(String code) {
-        return (urlStub + "products/barcodes/" + code + "?api-version=2018-10-18&" + key);
-    }
+    private static final String BARCODE_URL = URL_STUB + "products/barcodes/%s?api-version=2018-10-18&" + KEY;
+    private static final String PRODUCT_URL = URL_STUB + "products/%s?api-version=2018-10-180&" + KEY;
+    private static final String PRICES_URL = URL_STUB + products/{sku}/prices?api-version=2018-10-18[&stores]
 
-    // takes in partial url that you get from a barcode search
-    // returns full url that you can search with
-    public static String makeProductURL(String given) {
-        return urlStub + given + "&" + key;
+    public static String makeURL(String input, Request_Type r) {
+        String url = null;
+        switch(r) {
+            case barcode: url = BARCODE_URL;    //Uses Barcode
+                break;
+            case product: url = PRODUCT_URL;    //Uses SKU
+                break;
+            case meal: url = SKU_URL;
+                break;
+            case price: url = SKU_URL;
+                break;
+            case price: url = SKU_URL;
+                break;
+
+        }
+        return String.format(url,input);
     }
 
     //takes in url for a product
@@ -49,43 +64,53 @@ public class WegmansFactory {
     }
 
     // gets the data from a url and returns it in a string
-    public static String getInfo(String url) throws IOException {
+    public static JSONObject getJSONResponse(String url) throws IOException, JSONException {
         URL requestURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
 
-
-        InputStream response = null;
+        //Initialized Buffered Reader and JSONObject
+        JSONObject jsonResponse = null;
         BufferedReader bReader = null;
-        String inputLine;
-        String content = "";
 
-        try {
-            response = con.getInputStream();
-            bReader = new BufferedReader(new InputStreamReader(new GZIPInputStream(response)));
-
-            while ((inputLine = bReader.readLine()) != null) {
-                content += inputLine;
-            }
-        } catch (ZipException z) {
-            response = con.getInputStream();
-            bReader = new BufferedReader(new InputStreamReader(response));
-
-            while ((inputLine = bReader.readLine()) != null) {
-                content += inputLine;
-            }
-
-        } catch (Exception e) {
+        try {                       //GZip data
+            bReader = new BufferedReader(new InputStreamReader(new GZIPInputStream(con.getInputStream())));
+        } catch (ZipException z) {  //Basic JSON data
+            bReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } catch (Exception e) {     // Buffered Reader error
             e.printStackTrace();
         } finally {
+
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;    //Goes through the stream and builds a string
+            while ((inputStr = bReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            // Converts a string into a JSONObject
+            jsonResponse = new JSONObject(responseStrBuilder.toString());
+
             bReader.close();
-            response.close();
         }
 
         con.disconnect();
 
-        return content;
+        return jsonResponse;
+    }
+
+}
+
+class WegmansData {
+
+    private String UPC;
+    private String SKU;
+    private String Price;
+
+    public WegmansData(String upc, String sku, String price) {
+        this.UPC = upc;
+        this.SKU = sku;
+        this.Price = price;
     }
 
 }
