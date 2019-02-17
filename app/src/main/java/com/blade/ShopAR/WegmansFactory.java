@@ -48,20 +48,24 @@ public class WegmansFactory {
 
 
 
-    public static WegmansData upcToData(String upc) throws IOException{
+    public static WegmansData upcToData(String upc) {
         WegmansData data = new WegmansData();
-        String barcodeURL = makeURL(upc, Request_Type.barcode);
-        Map<String, Object> barcodeInfo = getJSONResponse(barcodeURL);
-        data.setUPC(upc);
-        String sku = barcodeInfo.get("sku").toString();
-        sku = sku.substring(0, sku.length() - 2);
-        data.setSKU(sku);
-        String priceURL = makeURL(sku, Request_Type.price);
+        try {
+            String barcodeURL = makeURL(upc, Request_Type.barcode);
+            Map<String, Object> barcodeInfo = getJSONResponse(barcodeURL);
+            data.setUPC(upc);
+            String sku = barcodeInfo.get("sku").toString();
+            sku = sku.substring(0, sku.length() - 2);
+            data.setSKU(sku);
+            String priceURL = makeURL(sku, Request_Type.price);
 
-        Map<String, Object> priceInfo = getJSONResponse(priceURL);
-        Double price = (Double) ((ArrayList<LinkedTreeMap<String, Object>>) priceInfo.get("stores")).get(0).get("price");
-        
-        data.setPrice(price.toString());
+            Map<String, Object> priceInfo = getJSONResponse(priceURL);
+            Double price = (Double) ((ArrayList<LinkedTreeMap<String, Object>>) priceInfo.get("stores")).get(0).get("price");
+
+            data.setPrice(price.toString());
+        } catch (IOException e) {
+            return null;
+        }
 
         return data;
     }
