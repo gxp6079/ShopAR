@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
 //import com.google.gson.stream.JsonReader;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.*;
 
@@ -20,11 +22,16 @@ public class WegmansFactory {
     public static void main(String[] args) throws IOException {
         String url = makeURL("3400004025", Request_Type.barcode);
         Map<String, Object> s = getJSONResponse(url);
+        WegmansData data = upcToData("3400004025");
+        System.out.println(data.getSKU());
+        System.out.println(data.getUPC());
+        System.out.println(data.getPrice());
+
         //JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
         //JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
         //JSONObject s3 = getJSONResponse(makeURL("484208", Request_Type.price));
 
-        System.out.println(s.get("_links"));
+        //System.out.println(((ArrayList<String>) s.get("_links")).get(0));
         //System.out.println(s1.replace(',', '\n'));
     }
 
@@ -37,10 +44,30 @@ public class WegmansFactory {
 
     private static final String BARCODE_URL = URL_STUB + "products/barcodes/%s?api-version=2018-10-18&" + KEY;
     private static final String PRODUCT_URL = URL_STUB + "products/%s?api-version=2018-10-180&" + KEY;
-    private static final String PRICES_URL = URL_STUB + "products/%s/prices?api-version=2018-10-18" + KEY;
+    private static final String PRICES_URL = URL_STUB + "products/%s/prices?api-version=2018-10-18&" + KEY;
+
+
+
+    public static WegmansData upcToData(String upc) throws IOException{
+        WegmansData data = new WegmansData();
+        String barcodeURL = makeURL(upc, Request_Type.barcode);
+        Map<String, Object> barcodeInfo = getJSONResponse(barcodeURL);
+        data.setUPC(upc);
+        String sku = barcodeInfo.get("sku").toString();
+        sku = sku.substring(0, sku.length() - 2);
+        data.setSKU(sku);
+        String priceURL = makeURL(sku, Request_Type.price);
+
+        Map<String, Object> priceInfo = getJSONResponse(priceURL);
+        Double price = (Double) ((ArrayList<LinkedTreeMap<String, Object>>) priceInfo.get("stores")).get(0).get("price");
+        
+        data.setPrice(price.toString());
+
+        return data;
+    }
+
 
     public static String makeURL(String input, Request_Type r) {
-        
         String url = null;
         switch(r) {
             case barcode:
@@ -110,10 +137,39 @@ class WegmansData {
     private String SKU;
     private String Price;
 
+    public WegmansData() {
+        this.UPC = null;
+        this.SKU = null;
+        this.Price = null;
+    }
+
     public WegmansData(String upc, String sku, String price) {
         this.UPC = upc;
         this.SKU = sku;
         this.Price = price;
     }
 
+    public void setSKU(String SKU) {
+        this.SKU = SKU;
+    }
+
+    public void setPrice(String price) {
+        this.Price = price;
+    }
+
+    public void setUPC(String UPC) {
+        this.UPC = UPC;
+    }
+
+    public String getSKU() {
+        return this.SKU;
+    }
+
+    public String getUPC() {
+        return this.UPC;
+    }
+
+    public String getPrice() {
+        return this.Price;
+    }
 }
