@@ -74,14 +74,14 @@ public class WegmansFactory {
     }
 
     // gets the data from a url and returns it in a string
-    public static Object getJSONResponse(String url) throws IOException {
+    public static Map<String, String> getJSONResponse(String url) throws IOException {
         URL requestURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
 
         //Initialized Buffered Reader and JSONObject
-        Object jsonResponse = null;
+        Map<String, String> jsonResponses;
         BufferedReader bReader = null;
 
         try {                       //GZip data
@@ -99,16 +99,14 @@ public class WegmansFactory {
                 responseStrBuilder.append(inputStr);
 
             Gson gson = new Gson();
-            Map<String, String> map = gson.fromJson(responseStrBuilder.toString(), Map.class);
-            System.out.println(map.toString());
-
+            jsonResponses = gson.fromJson(responseStrBuilder.toString(), Map.class);
 
             bReader.close();
         }
 
         con.disconnect();
 
-        return jsonResponse;
+        return jsonResponses;
     }
 
 }
