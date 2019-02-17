@@ -21,6 +21,7 @@ import java.util.List;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.view.KeyEvent.KEYCODE_ENTER;
+import static android.view.KeyEvent.KEYCODE_MENU;
 import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 public class SimpleScannerActivity extends Activity implements ZXingScannerView.ResultHandler, KeyEvent.Callback {
@@ -67,14 +68,17 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         Log.v(TAG, rawResult.getText()); // Prints scan results
         Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
         // If you would like to resume scanning, call this method below:
-        mScannerView.resumeCameraPreview(this);
+
     }
 
     public boolean onKeyUp (int keyCode, KeyEvent event){
         switch (keyCode){
-            case KEYCODE_ENTER:
+            case KEYCODE_MENU:
                 shoppingCart.addToCart(this.price);
+                mScannerView.resumeCameraPreview(this);
                 return true;
+            case KEYCODE_ENTER:
+                mScannerView.resumeCameraPreview(this);
             default:
                 return super.onKeyUp(keyCode, event);
         }
