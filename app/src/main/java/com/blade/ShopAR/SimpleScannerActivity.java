@@ -67,6 +67,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         // Do something with the result here
         Log.v(TAG, rawResult.getText()); // Prints scan results
         Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
+        this.price += 1;
         // If you would like to resume scanning, call this method below:
 
     }
@@ -75,6 +76,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         switch (keyCode){
             case KEYCODE_MENU:
                 shoppingCart.addToCart(this.price);
+                Log.v(TAG, Integer.toString(price));
                 mScannerView.resumeCameraPreview(this);
                 return true;
             case KEYCODE_ENTER:
