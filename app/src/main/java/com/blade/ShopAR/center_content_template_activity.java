@@ -1,4 +1,4 @@
-package devkit.blade.vuzix.com.blade_template_app;
+package com.blade.ShopAR;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.vuzix.hud.actionmenu.ActionMenuActivity;
 import com.vuzix.hud.actionmenu.DefaultActionMenuItemView;
+
+//import devkit.blade.vuzix.com.blade_template_app.around_content_template_activity;
+//import devkit.blade.vuzix.com.blade_template_app.center_content_pop_up_menu_template_activity;
 
 
 /**
@@ -96,7 +99,7 @@ public class center_content_template_activity extends ActionMenuActivity {
     //This events where register via the XML for the menu definitions.
     public void showHello(MenuItem item){
 
-        showToast(getString(R.string.Hello));
+        showToast("Hello WARld");
         mainText.setText(getString(R.string.Hello));
         VuzixMenuItem.setEnabled(true);
         BladeMenuItem.setEnabled(true);
@@ -117,12 +120,12 @@ public class center_content_template_activity extends ActionMenuActivity {
 
     public void showbottomlock(MenuItem item)
     {
-        startActivity(new Intent(this, around_content_template_activity.class));
+        //startActivity(new Intent(this, around_content_template_activity.class));
     }
 
     public void showpopUp(MenuItem item)
     {
-        startActivity(new Intent(this, center_content_pop_up_menu_template_activity.class));
+        //startActivity(new Intent(this, center_content_pop_up_menu_template_activity.class));
     }
 
     private void showToast(final String text){
