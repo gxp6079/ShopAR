@@ -4,29 +4,27 @@ import android.util.JsonReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static java.lang.System.in;
+//import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.*;
 
 public class WegmansFactory {
 
-    public static void main(String[] args) throws IOException, JSONException {
+    public static void main(String[] args) throws IOException {
         String url = makeURL("3400004025", Request_Type.barcode);
-        JSONObject s = getJSONResponse(url);
-        JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
-        JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
-        JSONObject s3 = getJSONResponse(makeURL("484208", Request_Type.price));
+        Object s = getJSONResponse(url);
+        //JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
+        //JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
+        //JSONObject s3 = getJSONResponse(makeURL("484208", Request_Type.price));
 
-        System.out.println(s.get("_links"));
+        //System.out.println(s.get("_links"));
         //System.out.println(s1.replace(',', '\n'));
     }
 
@@ -76,14 +74,14 @@ public class WegmansFactory {
     }
 
     // gets the data from a url and returns it in a string
-    public static JSONObject getJSONResponse(String url) throws IOException, JSONException {
+    public static Object getJSONResponse(String url) throws IOException {
         URL requestURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Content-Type", "application/json");
 
         //Initialized Buffered Reader and JSONObject
-        JSONObject jsonResponse;
+        Object jsonResponse = null;
         BufferedReader bReader = null;
 
         try {                       //GZip data
@@ -100,9 +98,10 @@ public class WegmansFactory {
             while ((inputStr = bReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
-            // Converts a string into a JSONObject
-            //JsonReader jReader = Json.createReader();
-            jsonResponse = new JSONObject(responseStrBuilder.toString());
+            Gson gson = new Gson();
+            Map<String, String> map = gson.fromJson(responseStrBuilder.toString(), Map.class);
+            System.out.println(map.toString());
+
 
             bReader.close();
         }
