@@ -5,10 +5,13 @@ import android.app.Activity;
 import android.drm.DrmStore;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.view.InputEvent;
 
@@ -26,11 +29,12 @@ import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 public class SimpleScannerActivity extends Activity implements ZXingScannerView.ResultHandler, KeyEvent.Callback {
 
-    private TextView barcodeText;
 
     private ZXingScannerView mScannerView;
 
     private ShoppingCart shoppingCart;
+
+    private TextView textView;
 
     private int price;
 
@@ -42,11 +46,10 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         //mScannerView.setFormats(formats);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         mScannerView.setAutoFocus(true);
-        barcodeText = findViewById(R.id.main_text);
-        setContentView(mScannerView);// Set the scanner view as the content view
-
+        // Set the scanner view as the content view
         this.shoppingCart = new ShoppingCart();
-
+        setContentView(mScannerView);
+        textView = new TextView(this);
     }
 
     @Override
@@ -77,6 +80,9 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
             case KEYCODE_MENU:
                 shoppingCart.addToCart(this.price);
                 Log.v(TAG, Integer.toString(price));
+                mScannerView.removeView(textView);
+                textView.setText(Integer.toString(shoppingCart.getTotal()));
+                mScannerView.addView(textView);
                 mScannerView.resumeCameraPreview(this);
                 return true;
             case KEYCODE_ENTER:

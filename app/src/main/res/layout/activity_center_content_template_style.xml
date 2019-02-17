@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SimpleScannerActivity">
+    >
 
     <!-- Like any Android Application, you will need a Layout to define your UI and real state for
     display information. -->
     <!--Center Lock style means that the View or real-state available is in the center and its lock
     to that position. The Action menus move underneath the main UI.
      This is the simples and more common scenario-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_text"
-        android:text="@string/CenterContentInfo"
-        android:layout_alignParentTop="true"/>
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="471dp"
+            android:text="@string/CenterContentInfo"
+            tools:context=".center_content_template_activity"/>
+        <me.dm7.barcodescanner.zxing.ZXingScannerView
+            android:id="@+id/Scanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".SimpleScannerActivity"/>
+    />
+
+
+
 
 </RelativeLayout>

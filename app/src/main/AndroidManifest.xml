@@ -32,8 +32,10 @@
             android:name="com.vuzix.icon.tint" android:value="true" />
 
         </activity>
-
+        <activity android:name=".center_content_template_activity" >
+        </activity>
     </application>
+
 
     <!--<application-->
         <!--android:name=".BladeSampleApplication"-->
@@ -91,5 +93,6 @@
     <!--</application>-->
 
     <uses-permission android:name="android.permission.CAMERA" />
+
 
 </manifest>
