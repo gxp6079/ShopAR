@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".center_content_template_activity">
+    tools:context=".SimpleScannerActivity">
 
     <!-- Like any Android Application, you will need a Layout to define your UI and real state for
     display information. -->

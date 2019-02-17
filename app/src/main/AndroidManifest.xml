@@ -17,7 +17,7 @@
         <meta-data
         android:name="com.vuzix.icon.tint" android:value="true" />
 
-        <activity android:name=".center_content_template_activity">
+        <activity android:name=".SimpleScannerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,7 +91,5 @@
     <!--</application>-->
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
 </manifest>

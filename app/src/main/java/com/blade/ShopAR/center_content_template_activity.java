@@ -3,11 +3,29 @@ package com.blade.ShopAR;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.util.SparseArray;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import com.vuzix.hud.actionmenu.ActionMenuActivity;
 import com.vuzix.hud.actionmenu.DefaultActionMenuItemView;
@@ -40,6 +58,7 @@ public class center_content_template_activity extends ActionMenuActivity {
         setContentView(R.layout.activity_center_content_template_style);
 
         mainText = findViewById(R.id.main_text);
+
     }
 
     /**

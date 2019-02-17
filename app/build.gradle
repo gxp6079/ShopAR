@@ -15,6 +15,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        jcenter()
+    }
 }
 
 dependencies {
@@ -25,4 +28,6 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.google.android.gms:play-services:7.8+'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation  'me.dm7.barcodescanner:zxing:1.9.8'
 }

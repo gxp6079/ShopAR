@@ -1,5 +1,6 @@
 package devkit.blade.vuzix.com.blade_template_app;
 
+import com.blade.ShopAR.R;
 import com.vuzix.hud.resources.DynamicThemeApplication;
 
 /**
