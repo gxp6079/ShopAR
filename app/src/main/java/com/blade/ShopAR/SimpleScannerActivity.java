@@ -79,6 +79,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
                 if(this.currentBarcode != null) {
                     shoppingCart.addToCart(WegmansFactory.upcToData(this.currentBarcode));
                     this.currentBarcode = null;
+                    Log.v(TAG, "Total: " + shoppingCart.getTotal());
                 }
                 mScannerView.resumeCameraPreview(this);
 
