@@ -37,7 +37,6 @@ public class WegmansFactory {
     private static final String BARCODE_URL = URL_STUB + "products/barcodes/%s?api-version=2018-10-18&" + KEY;
     private static final String PRODUCT_URL = URL_STUB + "products/%s?api-version=2018-10-180&" + KEY;
     private static final String PRICES_URL = URL_STUB + products/{sku}/prices?api-version=2018-10-18[&stores]
-
     public static String makeURL(String input, Request_Type r) {
         String url = null;
         switch(r) {
