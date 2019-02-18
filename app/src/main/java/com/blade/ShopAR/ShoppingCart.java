@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ShoppingCart {
 
-    private int total;
+    private double total;
     private Map<WegmansData, Integer> cart;
 
     public ShoppingCart(){
@@ -13,11 +13,11 @@ public class ShoppingCart {
         this.total = 0;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return this.total;
     }
 
-    public int recountTotal(){
+    public double recountTotal(){
 
         int total = 0;
 

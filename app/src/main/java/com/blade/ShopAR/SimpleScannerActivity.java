@@ -32,6 +32,8 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
 
     private ShoppingCart shoppingCart;
 
+    private TextView textView;
+
     private String currentBarcode = null;
 
     public void onCreate(Bundle state) {
@@ -46,6 +48,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         setContentView(mScannerView);// Set the scanner view as the content view
 
         this.shoppingCart = new ShoppingCart();
+        textView = new TextView(this);
 
     }
 
@@ -77,10 +80,26 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         switch (keyCode){
             case KEYCODE_MENU:
                 if(this.currentBarcode != null) {
-                    shoppingCart.addToCart(WegmansFactory.upcToData(this.currentBarcode));
-                    this.currentBarcode = null;
-                    Log.v(TAG, "Total: " + shoppingCart.getTotal());
+                    WegmansFactory wf = new WegmansFactory(this.currentBarcode, new Done() {
+                        @Override
+                        public void onDone(final WegmansData data) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shoppingCart.addToCart(data);
+                                }
+                            });
+                        }
+                    });
+                    wf.start();
+                    //shoppingCart.addToCart(wf.data);
+                    //this.currentBarcode = null;
+                    System.out.println(TAG + "Total: " + shoppingCart.getTotal());
                 }
+                this.currentBarcode = null;
+                mScannerView.removeView(textView);
+                textView.setText(("$" + Double.toString(shoppingCart.getTotal())));
+                mScannerView.addView(textView);
                 mScannerView.resumeCameraPreview(this);
 
                 return true;

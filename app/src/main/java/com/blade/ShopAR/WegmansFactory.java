@@ -1,14 +1,18 @@
 package com.blade.ShopAR;
 
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.util.JsonReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
@@ -17,28 +21,49 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.*;
 
-public class WegmansFactory {
+public class WegmansFactory extends Thread {
+    private String upc;
+    public WegmansData data;
+    private Done callBack;
 
-    public static void main(String[] args) throws IOException {
-        String url = makeURL("3400004025", Request_Type.barcode);
-        Map<String, Object> s = getJSONResponse(url);
-        WegmansData data = upcToData("3400004025");
-        System.out.println(data.getSKU());
-        System.out.println(data.getUPC());
-        System.out.println(data.getPrice());
-
-        //JSONObject s1 = getJSONResponse(URL_STUB + "/products/36794?api-version=2018-10-18" + "&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e");
-        //JSONObject s2 = getJSONResponse(URL_STUB + "/products/665368?api-version=2018-10-18" + "&" + KEY);
-        //JSONObject s3 = getJSONResponse(makeURL("484208", Request_Type.price));
-
-        //System.out.println(((ArrayList<String>) s.get("_links")).get(0));
-        //System.out.println(s1.replace(',', '\n'));
+    public WegmansFactory(String upc, Done callBack) {
+        this.upc = upc;
+        this.data = new WegmansData();
+        this.callBack = callBack;
     }
 
-    // "/products/484208?api-version=2018-10-18"
+    @Override
+    public void run() {
+        this.data = this.upcToData(this.upc);
+        this.callBack.onDone(this.data);
+    }
+
+
+//    public static void main(String[] args) throws IOException {
+////        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+////
+////        StrictMode.setThreadPolicy(policy);
+//
+//
+//        WegmansFactory wf = new WegmansFactory("034000040254", );
+//        wf.start();
+//
+//        //WegmansData data =  WegmansFactory("034000040254"); //7789018860
+//        System.out.println(wf.data.getSKU());
+//        System.out.println(wf.data.getUPC());
+//        System.out.println(wf.data.getPrice());
+//
+//
+//    }
     // "https://api.wegmans.io/meals/recipes/22187?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
+    // "/products/484208?api-version=2018-10-18"
+    // "https://api.wegmans.io/products/barcodes/7789018860?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
+
+    // https://api.wegmans.io/products/barcodes/3400004025?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e
+    // https://api.wegmans.io/products/barcodes/3400004025?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e
 
     private static enum Request_Type {barcode, product, price, meal, recipe, stores}
+
     private static final String URL_STUB = "https://api.wegmans.io/";
     private static final String KEY = "subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e";
 
@@ -47,16 +72,22 @@ public class WegmansFactory {
     private static final String PRICES_URL = URL_STUB + "products/%s/prices?api-version=2018-10-18&" + KEY;
 
 
-
-    public static WegmansData upcToData(String upc) {
+    public WegmansData upcToData(String barcode) {
         WegmansData data = new WegmansData();
         try {
-            String barcodeURL = makeURL(upc, Request_Type.barcode);
+            barcode = barcode.substring(1, barcode.length() - 1);
+            System.out.println("UPC: " + barcode);
+            String barcodeURL = makeURL(barcode, Request_Type.barcode);
+            System.out.println(barcodeURL);
             Map<String, Object> barcodeInfo = getJSONResponse(barcodeURL);
-            data.setUPC(upc);
+            data.setUPC(barcode);
             String sku = barcodeInfo.get("sku").toString();
             sku = sku.substring(0, sku.length() - 2);
             data.setSKU(sku);
+
+//            String productURL = makeURL(sku, Request_Type.product);
+//            Map<String, Object> productInfo = getJSONResponse(productURL);
+
             String priceURL = makeURL(sku, Request_Type.price);
 
             Map<String, Object> priceInfo = getJSONResponse(priceURL);
@@ -73,7 +104,7 @@ public class WegmansFactory {
 
     public static String makeURL(String input, Request_Type r) {
         String url = null;
-        switch(r) {
+        switch (r) {
             case barcode:
                 url = BARCODE_URL;    //Uses Barcode
                 break;
@@ -83,22 +114,12 @@ public class WegmansFactory {
             case price:
                 url = PRICES_URL;
                 break;
-            /*case meal:
-                url = MEALS_URL;
-                break;
-            case recipe:
-                url = RECIPES_URL;
-                break;
-            case stores:
-                url = STORES_URL;
-                break;
-            Not iplemented yet, no use planned. Trash. */
         }
-        return String.format(url,input);
+        return String.format(url, input);
     }
 
     // gets the data from a url and returns it in a string
-    public static Map<String, Object> getJSONResponse(String url) throws IOException {
+    public Map<String, Object> getJSONResponse(String url) throws IOException {
         URL requestURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
@@ -107,32 +128,58 @@ public class WegmansFactory {
         //Initialized Buffered Reader and JSONObject
         Map<String, Object> jsonResponses;
         BufferedReader bReader = null;
+        System.out.println(con.getResponseCode());
 
-        try {                       //GZip data
-            bReader = new BufferedReader(new InputStreamReader(new GZIPInputStream(con.getInputStream())));
-        } catch (ZipException z) {  //Basic JSON data
-            bReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        } catch (Exception e) {     // Buffered Reader error
-            e.printStackTrace();
-        } finally {
+        String encoding = con.getHeaderField("Content-Encoding");
+        boolean gzipped = encoding != null && encoding.toLowerCase().contains("gzip");
 
-            StringBuilder responseStrBuilder = new StringBuilder();
 
-            String inputStr;    //Goes through the stream and builds a string
-            while ((inputStr = bReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
+        if (gzipped) {
+            try {                       //GZip data
+                InputStream in = con.getInputStream();
+                GZIPInputStream gzp = new GZIPInputStream(in);
+                bReader = new BufferedReader(new InputStreamReader(gzp));
+            } catch (Exception e) {     // Buffered Reader error
+                e.printStackTrace();
+                return null;
+            } finally {
 
-            Gson gson = new Gson();
-            jsonResponses = gson.fromJson(responseStrBuilder.toString(), Map.class);
+                StringBuilder responseStrBuilder = new StringBuilder();
 
-            bReader.close();
+                String inputStr;    //Goes through the stream and builds a string
+                while ((inputStr = bReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+
+                Gson gson = new Gson();
+                jsonResponses = gson.fromJson(responseStrBuilder.toString(), Map.class);
+
+                bReader.close();
+            }
+        } else {
+            try {
+                bReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+
+                StringBuilder responseStrBuilder = new StringBuilder();
+
+                String inputStr;    //Goes through the stream and builds a string
+                while ((inputStr = bReader.readLine()) != null)
+                    responseStrBuilder.append(inputStr);
+
+                Gson gson = new Gson();
+                jsonResponses = gson.fromJson(responseStrBuilder.toString(), Map.class);
+
+                bReader.close();
+            }
         }
 
         con.disconnect();
 
         return jsonResponses;
     }
-
 }
 
 class WegmansData {
