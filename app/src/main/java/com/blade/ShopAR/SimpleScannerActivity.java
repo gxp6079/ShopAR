@@ -47,7 +47,6 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
 
         this.shoppingCart = new ShoppingCart();
         textView = new TextView(this);
-
     }
 
     @Override
@@ -92,9 +91,9 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
                     System.out.println(TAG + "Total: " + shoppingCart.getTotal());
                 }
                 this.currentBarcode = null;
-                mScannerView.removeView(textView);
-                textView.setText(("$" + Double.toString(shoppingCart.getTotal())));
-                mScannerView.addView(textView);
+
+                setText("$" + Double.toString(shoppingCart.getTotal()));
+
                 mScannerView.resumeCameraPreview(this);
 
                 return true;
@@ -103,5 +102,11 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
             default:
                 return super.onKeyUp(keyCode, event);
         }
+    }
+
+    private void setText(String s) {
+        mScannerView.removeView(textView);
+        textView.setText(s);
+        mScannerView.addView(textView);
     }
 }
