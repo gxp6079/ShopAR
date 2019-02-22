@@ -58,7 +58,6 @@ public class center_content_template_activity extends ActionMenuActivity {
         setContentView(R.layout.activity_center_content_template_style);
 
         mainText = findViewById(R.id.main_text);
-
     }
 
     /**
