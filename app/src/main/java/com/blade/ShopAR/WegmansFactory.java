@@ -37,31 +37,7 @@ public class WegmansFactory extends Thread {
         this.data = this.upcToData(this.upc);
         this.callBack.onDone(this.data);
     }
-
-
-//    public static void main(String[] args) throws IOException {
-////        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-////
-////        StrictMode.setThreadPolicy(policy);
-//
-//
-//        WegmansFactory wf = new WegmansFactory("034000040254", );
-//        wf.start();
-//
-//        //WegmansData data =  WegmansFactory("034000040254"); //7789018860
-//        System.out.println(wf.data.getSKU());
-//        System.out.println(wf.data.getUPC());
-//        System.out.println(wf.data.getPrice());
-//
-//
-//    }
-    // "https://api.wegmans.io/meals/recipes/22187?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
-    // "/products/484208?api-version=2018-10-18"
-    // "https://api.wegmans.io/products/barcodes/7789018860?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e"
-
-    // https://api.wegmans.io/products/barcodes/3400004025?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e
-    // https://api.wegmans.io/products/barcodes/3400004025?api-version=2018-10-18&subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e
-
+    
     private static enum Request_Type {barcode, product, price, meal, recipe, stores}
 
     private static final String URL_STUB = "https://api.wegmans.io/";
