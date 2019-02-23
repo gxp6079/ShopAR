@@ -28,6 +28,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
 
     private ZXingScannerView mScannerView;
 
+    private WegmansManager wegManager;
     private ShoppingCart shoppingCart;
 
     private TextView textView;
@@ -46,6 +47,9 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         setContentView(mScannerView);// Set the scanner view as the content view
 
         this.shoppingCart = new ShoppingCart();
+        this.wegManager = new WegmansManager(this.shoppingCart);
+        this.wegManager.start();
+
         textView = new TextView(this);
     }
 
@@ -75,20 +79,8 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         switch (keyCode){
             case KEYCODE_MENU:
                 if(this.currentBarcode != null) {
-                    WegmansFactory wf = new WegmansFactory(this.currentBarcode, new Done() {
-                        @Override
-                        public void onDone(final WegmansData data) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    shoppingCart.addToCart(data);
-                                }
-                            });
-                        }
-                    });
-                    wf.start();
+                    this.wegManager.addRequest(this.currentBarcode);
 
-                    System.out.println(TAG + "Total: " + shoppingCart.getTotal());
                 }
                 this.currentBarcode = null;
 
@@ -108,5 +100,12 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         mScannerView.removeView(textView);
         textView.setText(s);
         mScannerView.addView(textView);
+    }
+
+    private void endApplication() {
+        this.wegManager.endManager();
+        try {
+            this.wegManager.join();
+        } catch (InterruptedException e) { e.printStackTrace(); }
     }
 }

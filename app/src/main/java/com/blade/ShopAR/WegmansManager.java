@@ -21,23 +21,8 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.*;
 
-public class WegmansFactory extends Thread {
-    private String upc;
-    public WegmansData data;
-    private Done callBack;
+public class WegmansManager extends Thread {
 
-    public WegmansFactory(String upc, Done callBack) {
-        this.upc = upc;
-        this.data = new WegmansData();
-        this.callBack = callBack;
-    }
-
-    @Override
-    public void run() {
-        this.data = this.upcToData(this.upc);
-        this.callBack.onDone(this.data);
-    }
-    
     private static enum Request_Type {barcode, product, price, meal, recipe, stores}
 
     private static final String URL_STUB = "https://api.wegmans.io/";
@@ -47,6 +32,39 @@ public class WegmansFactory extends Thread {
     private static final String PRODUCT_URL = URL_STUB + "products/%s?api-version=2018-10-180&" + KEY;
     private static final String PRICES_URL = URL_STUB + "products/%s/prices?api-version=2018-10-18&" + KEY;
 
+    public ShoppingCart sc;
+    public ArrayList<String> requests;
+
+    private boolean Running = false;
+
+    public WegmansManager(ShoppingCart shoppingCart) {
+        this.sc = shoppingCart;
+        this.requests = new ArrayList<>();
+    }
+
+    @Override
+    public void run() {
+
+        while(Running)
+            if(this.requests.isEmpty()) {
+                try {
+                    wait();
+                } catch (InterruptedException e) { e.printStackTrace(); }
+            } else {
+                this.sc.addToCart(upcToData(requests.get(0)));
+                this.requests.remove(0);
+            }
+    }
+
+    public void addRequest(String barcode) {
+        this.requests.add(barcode);
+        notify();
+    }
+
+    public void endManager() {
+        this.Running = false;
+        notify();
+    }
 
     public WegmansData upcToData(String barcode) {
         WegmansData data = new WegmansData();
@@ -60,9 +78,6 @@ public class WegmansFactory extends Thread {
             String sku = barcodeInfo.get("sku").toString();
             sku = sku.substring(0, sku.length() - 2);
             data.setSKU(sku);
-
-//            String productURL = makeURL(sku, Request_Type.product);
-//            Map<String, Object> productInfo = getJSONResponse(productURL);
 
             String priceURL = makeURL(sku, Request_Type.price);
 
@@ -96,6 +111,7 @@ public class WegmansFactory extends Thread {
 
     // gets the data from a url and returns it in a string
     public Map<String, Object> getJSONResponse(String url) throws IOException {
+
         URL requestURL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) requestURL.openConnection();
         con.setRequestMethod("GET");
