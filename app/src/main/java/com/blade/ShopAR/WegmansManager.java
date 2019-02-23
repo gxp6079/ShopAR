@@ -23,7 +23,7 @@ import com.google.gson.*;
 
 public class WegmansManager extends Thread {
 
-    private static enum Request_Type {barcode, product, price, meal, recipe, stores}
+    private enum Request_Type {barcode, product, price, meal, recipe, stores}
 
     private static final String URL_STUB = "https://api.wegmans.io/";
     private static final String KEY = "subscription-key=2d6e9a8181bf41c09a41bc6b6ec87c4e";
@@ -35,17 +35,19 @@ public class WegmansManager extends Thread {
     public ShoppingCart sc;
     public ArrayList<String> requests;
 
-    private boolean Running = false;
+    private boolean running;
 
     public WegmansManager(ShoppingCart shoppingCart) {
         this.sc = shoppingCart;
         this.requests = new ArrayList<>();
+
+        this.running = false;
     }
 
     @Override
     public void run() {
-
-        while(Running)
+        this.running = true;
+        while(this.running)
             if(this.requests.isEmpty()) {
                 try {
                     wait();
@@ -62,7 +64,7 @@ public class WegmansManager extends Thread {
     }
 
     public void endManager() {
-        this.Running = false;
+        this.running = false;
         notify();
     }
 
