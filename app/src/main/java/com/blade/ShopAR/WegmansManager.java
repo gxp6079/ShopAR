@@ -94,24 +94,36 @@ public class WegmansManager extends Thread {
         return data;
     }
 
-
+    /**
+     * Creates a Wegmans API request URL from the type of request and an input to be formatted into
+     * the request. A Barcode URL requires a barcode input, and a Product or Price URL requires a
+     * SKU input.
+     * @param input An input that changes depending on the request type also inputted
+     * @param r     A type of Wegmans API request that is being made
+     * @return      A Sting URL that can be used to get particular information from the Wegmans API
+     */
     public static String makeURL(String input, Request_Type r) {
         String url = null;
         switch (r) {
             case barcode:
-                url = BARCODE_URL;    //Uses Barcode
+                url = BARCODE_URL;  //Uses Barcode
                 break;
             case product:
-                url = PRODUCT_URL;    //Uses SKU
+                url = PRODUCT_URL;  //Uses SKU
                 break;
             case price:
-                url = PRICES_URL;
+                url = PRICES_URL;   //Uses SKU
                 break;
         }
         return String.format(url, input);
     }
 
-    // gets the data from a url and returns it in a string
+    /**
+     * 
+     * @param url
+     * @return
+     * @throws IOException
+     */
     public Map<String, Object> getJSONResponse(String url) throws IOException {
 
         URL requestURL = new URL(url);
